@@ -1,0 +1,75 @@
+# Send a notification (Email + SMS + In-App)
+POST http://localhost:8000/notifications
+Content-Type: application/json
+
+{
+    "user_id": "test_user1",
+    "types": ["email", "sms", "in_app"],
+    "title": "Test Combined Notification",
+    "message": "This is a test notification via Email, SMS and In-App",
+    "recipient_email": "user@example.com",
+    "recipient_phone": "+1234567890"
+}
+
+###
+
+# Send email notification only
+POST http://localhost:8000/notifications
+Content-Type: application/json
+
+{
+    "user_id": "test_user2",
+    "types": ["email"],
+    "title": "Test Email Notification",
+    "message": "This is a test email notification",
+    "recipient_email": "user@example.com"
+}
+
+###
+
+# Send SMS notification only
+POST http://localhost:8000/notifications
+Content-Type: application/json
+
+{
+    "user_id": "test_user3",
+    "types": ["sms"],
+    "title": "Test SMS Notification",
+    "message": "This is a test SMS notification",
+    "recipient_phone": "+1234567890"
+}
+
+###
+
+# Send in-app notification only
+POST http://localhost:8000/notifications
+Content-Type: application/json
+
+{
+    "user_id": "test_user4",
+    "types": ["in_app"],
+    "title": "Test In-App Notification",
+    "message": "This is a test in-app notification"
+}
+
+###
+
+# Get user notifications
+GET http://localhost:8000/users/test_user1/notifications
+
+###
+
+# PowerShell Example
+$headers = @{
+    "Content-Type" = "application/json"
+}
+$body = @{
+    "user_id" = "test_user1"
+    "types" = @("email", "sms")
+    "title" = "Test Combined Notification"
+    "message" = "This is a test notification via Email and SMS"
+    "recipient_email" = "user@example.com"
+    "recipient_phone" = "+1234567890"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:8000/notifications" -Method Post -Headers $headers -Body $body 
