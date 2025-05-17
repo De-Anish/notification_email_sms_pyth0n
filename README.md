@@ -80,7 +80,19 @@ payload = {
 response = requests.post(url, json=payload)
 print(response.json())
 ```
+``` Send a notification (Email + SMS + In-App)
+POST http://localhost:8000/notifications
+Content-Type: application/json
 
+{
+    "user_id": "test_user1",
+    "types": ["email", "sms", "in_app"],
+    "title": "Test Combined Notification",
+    "message": "This is a test notification via Email, SMS and In-App",
+    "recipient_email": "user@example.com",
+    "recipient_phone": "+1234567890"
+}
+```
 ## Screenshots
 
 ### Email Notification
