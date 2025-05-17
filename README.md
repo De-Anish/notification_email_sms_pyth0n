@@ -86,7 +86,7 @@ print(response.json())
 
 ### Email Notification
 *Screenshot showing successful delivery of email notification with the test message*
-
+Notification On email.jpg
 ### SMS Notification
 *Screenshot showing successful delivery of SMS notification with the test message*
 
