@@ -73,7 +73,6 @@ class Notification(BaseModel):
     created_at: str
     recipient_email: Optional[str] = None
     recipient_phone: Optional[str] = None
-
 def send_email(to_email: str,subject: str,message: str) -> bool:
     try:
         print(f"Attempting to send email to {to_email}")
@@ -110,7 +109,6 @@ def send_sms(to_phone: str, message: str) -> bool:
     except Exception as e:
         print(f"Error sending SMS: {str(e)}")
         return False
-
 def process_email_notification(notification: dict):
     if not notification.get('recipient_email'):
         print("No recipient email provided")
@@ -137,7 +135,6 @@ def process_sms_notification(notification: dict):
     )
     print(f"SMS processing result: {'success' if success else 'failed'}")
     return success
-
 def process_in_app_notification(notification: dict):
     user_id = notification['user_id']
     if user_id not in notifications_store:
