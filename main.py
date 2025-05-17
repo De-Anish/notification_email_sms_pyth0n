@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from fastapi import FastAPI, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
@@ -16,11 +15,7 @@ from email.mime.multipart import MIMEMultipart
 from twilio.rest import Client
 import os
 from dotenv import load_dotenv
-
-# Load environment variables from example.env since .env is blocked
 load_dotenv('example.env')
-
-# Debug print environment variables
 print("Environment Variables:")
 print(f"EMAIL_SENDER: {os.getenv('EMAIL_SENDER')}")
 print(f"SMTP_HOST: {os.getenv('SMTP_HOST')}")
@@ -28,11 +23,7 @@ print(f"SMTP_PORT: {os.getenv('SMTP_PORT')}")
 print(f"SMTP_USER: {os.getenv('SMTP_USER')}")
 print(f"TWILIO_ACCOUNT_SID: {os.getenv('TWILIO_ACCOUNT_SID')}")
 print(f"TWILIO_PHONE_NUMBER: {os.getenv('TWILIO_PHONE_NUMBER')}")
-
-# Initialize FastAPI app
 app = FastAPI(title="Notification Service")
-
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -40,34 +31,29 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 @app.middleware("http")
 async def add_response_headers(request: Request, call_next):
     response = await call_next(request)
-    response.headers["Content-Type"] = "application/json"
+    response.headers["Content-Type"] ="application/json"
     return response
-
-# Email configuration
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 SMTP_HOST = os.getenv("SMTP_HOST")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
 SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
-# Twilio configuration
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
-twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+twilio_client = Client(TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN)
 
-# In-memory storage for notifications
 notifications_store: Dict[str, List[Dict]] = {}
 notification_queue: List[Dict] = []
 
-class NotificationType(str, Enum):
-    EMAIL = "email"
-    SMS = "sms"
-    IN_APP = "in_app"
+class NotificationType(str,Enum):
+    EMAIL ="email"
+    SMS ="sms"
+    IN_APP ="in_app"
 
 class NotificationCreate(BaseModel):
     user_id: str
@@ -88,7 +74,7 @@ class Notification(BaseModel):
     recipient_email: Optional[str] = None
     recipient_phone: Optional[str] = None
 
-def send_email(to_email: str, subject: str, message: str) -> bool:
+def send_email(to_email: str,subject: str,message: str) -> bool:
     try:
         print(f"Attempting to send email to {to_email}")
         msg = MIMEMultipart()
@@ -97,7 +83,7 @@ def send_email(to_email: str, subject: str, message: str) -> bool:
         msg['Subject'] = subject
         msg.attach(MIMEText(message, 'plain'))
 
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+        with smtplib.SMTP(SMTP_HOST,SMTP_PORT) as server:
             print("Connecting to SMTP server...")
             server.starttls()
             print(f"Logging in with user: {SMTP_USER}")
@@ -138,7 +124,7 @@ def process_email_notification(notification: dict):
     )
     print(f"Email processing result: {'success' if success else 'failed'}")
     return success
-
+    
 def process_sms_notification(notification: dict):
     if not notification.get('recipient_phone'):
         print("No recipient phone number provided")
@@ -159,14 +145,14 @@ def process_in_app_notification(notification: dict):
     notifications_store[user_id].append(notification)
     return True
 
-async def process_notification(notification: dict, max_retries: int = 3):
+async def process_notification(notification: dict,max_retries: int = 3):
     processors = {
         'email': process_email_notification,
         'sms': process_sms_notification,
         'in_app': process_in_app_notification
     }
     
-    processor = processors.get(notification['type'])
+    processor =processors.get(notification['type'])
     if not processor:
         return False
 
@@ -184,7 +170,7 @@ async def process_notification(notification: dict, max_retries: int = 3):
         await asyncio.sleep(2 ** retries)
         retries += 1
     
-    notification['status'] = 'failed'
+    notification['status'] ='failed'
     return False
 
 @app.post("/notifications")
@@ -193,11 +179,11 @@ async def send_notification(notification: NotificationCreate):
         results = []
         
         for notification_type in notification.types:
-            notification_dict = {
+            notification_dict ={
                 "id": str(uuid.uuid4()),
-                "user_id": notification.user_id,
-                "type": str(notification_type.value) if isinstance(notification_type, NotificationType) else str(notification_type),
-                "title": str(notification.title),
+                "user_id":notification.user_id,
+                "type": str(notification_type.value) if isinstance(notification_type,NotificationType) else str(notification_type),
+                "title" :str(notification.title),
                 "message": str(notification.message),
                 "status": "pending",
                 "created_at": datetime.utcnow().isoformat(),
@@ -205,13 +191,13 @@ async def send_notification(notification: NotificationCreate):
                 "recipient_phone": str(notification.recipient_phone) if notification.recipient_phone else None
             }
 
-            if notification_type == NotificationType.EMAIL and not notification.recipient_email:
-                return {"ok": False, "error": "Email address is required for email notifications"}
+            if notification_type ==NotificationType.EMAIL and not notification.recipient_email:
+                return {"ok": False, "error":"Email address is required for email notifications"}
 
             if notification_type == NotificationType.SMS and not notification.recipient_phone:
-                return {"ok": False, "error": "Phone number is required for SMS notifications"}
+                return {"ok": False, "error":"Phone number is required for SMS notifications"}
 
-            success = await process_notification(notification_dict)
+            success =await process_notification(notification_dict)
             
             if success:
                 if notification.user_id not in notifications_store:
@@ -231,13 +217,13 @@ async def send_notification(notification: NotificationCreate):
         }
 
     except Exception as e:
-        print(f"Error in send_notification: {str(e)}")
-        return {"ok": False, "error": str(e)}
+        print(f"Error in send_notification:{str(e)}")
+        return {"ok": False, "error":str(e)}
 
 @app.get("/users/{user_id}/notifications")
 async def get_user_notifications(user_id: str):
     try:
-        notifications = notifications_store.get(user_id, [])
+        notifications =notifications_store.get(user_id, [])
         return {
             "ok": True,
             "data": notifications
@@ -249,7 +235,7 @@ async def process_queue():
     while True:
         try:
             if notification_queue:
-                notification = notification_queue.pop(0)
+                notification =notification_queue.pop(0)
                 await process_notification(notification)
             await asyncio.sleep(1)
         except Exception as e:
