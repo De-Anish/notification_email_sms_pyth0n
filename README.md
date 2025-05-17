@@ -1,4 +1,4 @@
-# Notification Service API
+![Notification_on_mobile](https://github.com/user-attachments/assets/33428d93-6375-46f9-8aa3-6a6e40c128c0)# Notification Service API
 
 A FastAPI-based notification service that supports Email, SMS, and In-App notifications.
 
@@ -86,9 +86,11 @@ print(response.json())
 
 ### Email Notification
 *Screenshot showing successful delivery of email notification with the test message*
-Notification On email.jpg
+![Notification On email](https://github.com/user-attachments/assets/863a47eb-05fe-450c-aa24-b63bfa1bb594)
+
 ### SMS Notification
 *Screenshot showing successful delivery of SMS notification with the test message*
+![Notification_on_mobile](https://github.com/user-attachments/assets/02de38e2-330b-4308-b33a-d91c8718e9c8)
 
 ## Environment Variables
 
