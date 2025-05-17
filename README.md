@@ -1,4 +1,3 @@
-![Notification_on_mobile](https://github.com/user-attachments/assets/33428d93-6375-46f9-8aa3-6a6e40c128c0)# Notification Service API
 
 A FastAPI-based notification service that supports Email, SMS, and In-App notifications.
 
@@ -91,7 +90,7 @@ print(response.json())
 ### SMS Notification
 *Screenshot showing successful delivery of SMS notification with the test message*
 ![Notification_on_mobile]<img src="https://github.com/user-attachments/assets/bc8a6615-47f1-4ea7-a292-adb66baa323f" width="300" />
-)
+
 
 
 ## Environment Variables
