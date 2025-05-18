@@ -101,7 +101,7 @@ Content-Type: application/json
 
 ### SMS Notification
 *Screenshot showing successful delivery of SMS notification with the test message*
-![Notification_on_mobile]<img src="https://github.com/user-attachments/assets/bc8a6615-47f1-4ea7-a292-adb66baa323f" width="300" />
+[Notification_on_mobile]<img src="https://github.com/user-attachments/assets/bc8a6615-47f1-4ea7-a292-adb66baa323f" width="300" />
 
 
 
